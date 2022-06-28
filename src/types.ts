@@ -8,4 +8,5 @@ export interface CardInfo {
 export interface People {
     hand: CardInfo[];
     total: number;
+    blackjack: boolean;
 }

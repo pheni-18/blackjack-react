@@ -12,8 +12,8 @@ export const HomePage: React.FC<HomePageProps> = (props) => {
     const [gameStatus, setGateStatus] = React.useState<string>('waiting');
 
     const [deck, setDeck] = React.useState<CardInfo[]>([]);
-    const [dealer, setDealer] = React.useState<People>({ hand: [], total: 0 });
-    const [player, setPlayer] = React.useState<People>({ hand: [], total: 0 });
+    const [dealer, setDealer] = React.useState<People>({ hand: [], total: 0, blackjack: false });
+    const [player, setPlayer] = React.useState<People>({ hand: [], total: 0, blackjack: false });
     const [gameResult, setGameResult] = React.useState<string>('');
 
     const createCards = (): CardInfo[] => {
@@ -85,10 +85,17 @@ export const HomePage: React.FC<HomePageProps> = (props) => {
         player.total = calcTotal(player.hand);
         dealer.total = calcTotal(dealer.hand);
 
+        if (player.total == 21) {
+            player.blackjack = true;
+            setGateStatus('dealer');
+        }
+        else {
+            setGateStatus('player');
+        }
+
         setDeck([...deck]);
         setPlayer({...player});
-        setDealer({...dealer});
-        setGateStatus('player');
+        setDealer({...dealer});        
     }, [player, dealer]);
 
     const handleHit = React.useCallback(() => {
@@ -111,13 +118,18 @@ export const HomePage: React.FC<HomePageProps> = (props) => {
         }
 
         dealer.hand[dealer.hand.length - 1].isShow = true;
-
-        while (dealer.total < 17) {
-            let card = deck.pop() as CardInfo;
-            card.isShow = true;
-            dealer.hand.push(card);
-            dealer.total = calcTotal(dealer.hand);
+        dealer.total = calcTotal(dealer.hand);
+        if (dealer.total == 21) {
+            dealer.blackjack = true;
         }
+        else {
+            while (dealer.total < 17) {
+                let card = deck.pop() as CardInfo;
+                card.isShow = true;
+                dealer.hand.push(card);
+                dealer.total = calcTotal(dealer.hand);
+            }
+        } 
 
         setDeck([...deck]);
         setDealer({...dealer});
@@ -136,7 +148,15 @@ export const HomePage: React.FC<HomePageProps> = (props) => {
             setGameResult('win');
         }
         else if (player.total == dealer.total) {
-            setGameResult('draw');
+            if (player.blackjack && !dealer.blackjack) {
+                setGameResult('win');
+            }
+            else if (!player.blackjack && dealer.blackjack) {
+                setGameResult('lose');
+            }
+            else {
+                setGameResult('draw');
+            }            
         }
         else if (player.total > dealer.total) {
             setGameResult('win');
@@ -152,8 +172,8 @@ export const HomePage: React.FC<HomePageProps> = (props) => {
 
     const handleMoreGame = React.useCallback(() => {
         setDeck([]);
-        setPlayer({ hand: [], total: 0 });
-        setDealer({ hand: [], total: 0 });
+        setPlayer({ hand: [], total: 0, blackjack: false });
+        setDealer({ hand: [], total: 0, blackjack: false });
         setGateStatus('waiting');
     }, []);
 
@@ -177,6 +197,9 @@ export const HomePage: React.FC<HomePageProps> = (props) => {
             <p>deck</p>
             <p>残り: {deck.length}</p>
             <p>dealer</p>
+            {dealer.blackjack && (
+                <h3>Blackjack!</h3>
+            )}
             {dealer.hand.map(card => {
                 if (card.isShow) {
                     return (
@@ -191,6 +214,9 @@ export const HomePage: React.FC<HomePageProps> = (props) => {
             <p>total: {dealer.total}</p>
             <br />
             <p>player</p>
+            {player.blackjack && (
+                <h3>Blackjack!</h3>
+            )}
             {player.hand.map(card => {
                 return (
                     <>
