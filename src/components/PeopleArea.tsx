@@ -28,8 +28,8 @@ export const PeopleArea: React.FC<PeopleAreaProps> = (props) => {
             )}
             <Typography variant='h4'>total: {people.total}</Typography>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                {people.hand.map(card => {
-                    return <Card info={card} />
+                {people.hand.map((card, i) => {
+                    return <Card info={card} key={i} />
                 })}
             </Box>
         </Box>
