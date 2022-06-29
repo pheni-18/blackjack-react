@@ -7,11 +7,11 @@ const StyledButton = styled(Button)({
   
 
 export interface WaitingViewProps {
-    onClick: () => void;
+    onClickStart: () => void;
 };
 
 export const WaitingView: React.FC<WaitingViewProps> = (props) => {
-    const { onClick } = props;
+    const { onClickStart } = props;
 
     return (
         <>
@@ -22,7 +22,7 @@ export const WaitingView: React.FC<WaitingViewProps> = (props) => {
             >
                 <StyledButton
                     variant='contained'
-                    onClick={onClick}
+                    onClick={onClickStart}
                     size='large'
                 >
                     Start

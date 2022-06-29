@@ -1,10 +1,7 @@
 import React from 'react';
 import { CardInfo, People } from './types';
-import { Button } from '@mui/material';
-import { sleep, shuffleArray } from './utils';
-import { WaitingView } from './components'
-
-// TODO: designをいい感じにする
+import { shuffleArray } from './utils';
+import { WaitingView, PlayingView } from './components'
 
 export interface HomePageProps {};
 
@@ -63,7 +60,7 @@ export const HomePage: React.FC<HomePageProps> = (props) => {
         return total;
     }
 
-    const handleStart = React.useCallback(() => {
+    const handleClickStart = React.useCallback(() => {
         const cards: CardInfo[] = createCards();
         let deck = shuffleArray(cards);
 
@@ -98,7 +95,7 @@ export const HomePage: React.FC<HomePageProps> = (props) => {
         setDealer({...dealer});        
     }, [player, dealer]);
 
-    const handleHit = React.useCallback(() => {
+    const handleClickHit = React.useCallback(() => {
         let card = deck.pop() as CardInfo;
         card.isShow = true;
         player.hand.push(card);
@@ -108,7 +105,7 @@ export const HomePage: React.FC<HomePageProps> = (props) => {
         setPlayer({...player});
 
         if (player.total > 21) {
-            handleStand();
+            handleClickStand();
         }
     }, [deck, player]);
 
@@ -166,11 +163,11 @@ export const HomePage: React.FC<HomePageProps> = (props) => {
         }
     }, [gameStatus, player, dealer])
 
-    const handleStand = React.useCallback(() => {
+    const handleClickStand = React.useCallback(() => {
         setGateStatus('dealer');
     }, []);
 
-    const handleMoreGame = React.useCallback(() => {
+    const handleClickMoreGame = React.useCallback(() => {
         setDeck([]);
         setPlayer({ hand: [], total: 0, blackjack: false });
         setDealer({ hand: [], total: 0, blackjack: false });
@@ -181,59 +178,18 @@ export const HomePage: React.FC<HomePageProps> = (props) => {
         <>
             {gameStatus == 'waiting' ? (
                 <WaitingView
-                    onClick={handleStart}
+                    onClickStart={handleClickStart}
                 />
             ) : (
-                <>
-                    {gameStatus == 'player' && (
-                        <>
-                            <Button onClick={handleHit}>Hit</Button>
-                            <Button onClick={handleStand}>Stand</Button>
-                        </>
-                    )}
-                    {gameStatus == 'finished' && (
-                    <>
-                        <h3>{gameResult}</h3>
-                        <Button onClick={handleMoreGame}>More Game</Button>
-                    </>  
-                    )}
-                    <p>deck</p>
-                    <p>残り: {deck.length}</p>
-                    <p>dealer</p>
-                    {dealer.blackjack && (
-                        <h3>Blackjack!</h3>
-                    )}
-                    {dealer.hand.map(card => {
-                        if (card.isShow) {
-                            return (
-                                <>
-                                    <p>{card.mark}</p>
-                                    <p>{card.number}</p>
-                                    <p>{card.isShow}</p>
-                                </>
-                            )
-                        }
-                    })}
-                    <p>total: {dealer.total}</p>
-                    <br />
-                    <p>player</p>
-                    {player.blackjack && (
-                        <h3>Blackjack!</h3>
-                    )}
-                    {player.hand.map(card => {
-                        return (
-                            <>
-                                <p>{card.mark}</p>
-                                <p>{card.number}</p>
-                                <p>{card.isShow}</p>
-                            </>
-                        )
-                    })}
-                    <p>total: {player.total}</p>
-                    {player.total > 21 && (
-                        <p>burst!</p>
-                    )}
-                </>
+                <PlayingView
+                    gameStatus={gameStatus}
+                    player={player}
+                    dealer={dealer}
+                    onClickHit={handleClickHit}
+                    onClickStand={handleClickStand}
+                    onClickMoreGame={handleClickMoreGame}
+                    gameResult={gameResult}
+                />
             )}
         </>
     )
