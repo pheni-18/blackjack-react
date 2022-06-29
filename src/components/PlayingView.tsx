@@ -1,6 +1,6 @@
 import { Button, Grid } from '@mui/material';
 import { styled } from '@mui/system';
-import { People } from '../types';
+import { People, GameStatus, GameResult } from '../types';
 import { ResultArea } from './ResultArea';
 import { PeopleArea } from './PeopleArea';
 
@@ -16,13 +16,13 @@ const StyledButton = styled(Button)({
   
 
 export interface PlayingViewProps {
-    gameStatus: string;
+    gameStatus: GameStatus;
     player: People;
     dealer: People;
     onClickHit: () => void;
     onClickStand: () => void;
     onClickMoreGame: () => void;
-    gameResult: string;
+    gameResult?: GameResult;
 };
 
 export const PlayingView: React.FC<PlayingViewProps> = (props) => {
@@ -35,7 +35,7 @@ export const PlayingView: React.FC<PlayingViewProps> = (props) => {
                 alignItems='center'
                 justifyContent='center'
             >
-                {gameStatus == 'finished' && (
+                {(gameStatus == 'finished' && !!gameResult) && (
                     <Grid item xs={8}>
                         <ResultArea
                             gameResult={gameResult}

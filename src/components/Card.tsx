@@ -5,7 +5,7 @@ import AcUnitOutlinedIcon from '@mui/icons-material/AcUnitOutlined';
 import CloudOutlinedIcon from '@mui/icons-material/CloudOutlined';
 import NightlightOutlinedIcon from '@mui/icons-material/NightlightOutlined';
 import { styled } from '@mui/system';
-import { CardInfo } from '../types';
+import { CardInfo, Suit } from '../types';
 
 const StyledCard = styled(MuiCard)({
     width: 70,
@@ -21,18 +21,18 @@ export interface CardProps {
 export const Card: React.FC<CardProps> = (props) => {
     const { info } = props;
 
-    const createIcon = (mark: string) => {
-        switch (mark) {
+    const createIcon = (suit: Suit) => {
+        switch (suit) {
             case 'spade':
                 return <WbSunnyOutlinedIcon />;
-            case 'hurt':
+            case 'heart':
                 return <AcUnitOutlinedIcon />;
             case 'diamond':
                 return <CloudOutlinedIcon />;
-            case 'clover':
+            case 'club':
                 return <NightlightOutlinedIcon />;
             default:
-                throw new Error('invalid mark');
+                throw new Error('invalid suit');
         }
     };
 
@@ -41,7 +41,7 @@ export const Card: React.FC<CardProps> = (props) => {
             <CardContent>
                 {info.isShow ? (
                     <>
-                        {createIcon(info.mark)}
+                        {createIcon(info.suit)}
                         <Typography variant='h4' color="text.secondary">
                             {info.number}
                         </Typography>

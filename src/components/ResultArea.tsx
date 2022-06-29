@@ -1,7 +1,8 @@
 import { Button, Box, Typography } from '@mui/material';
+import { GameResult } from '../types';
 
 export interface ResultAreaProps {
-    gameResult: string;
+    gameResult: GameResult;
     onClickMoreGame: () => void;
 };
 

@@ -1,26 +1,26 @@
 import React from 'react';
-import { CardInfo, People } from './types';
+import { CardInfo, People, GameStatus, Suit, GameResult } from './types';
 import { shuffleArray } from './utils';
 import { WaitingView, PlayingView } from './components'
 
 export interface HomePageProps {};
 
 export const HomePage: React.FC<HomePageProps> = (props) => {
-    const [gameStatus, setGateStatus] = React.useState<string>('waiting');
+    const [gameStatus, setGateStatus] = React.useState<GameStatus>('waiting');
 
     const [deck, setDeck] = React.useState<CardInfo[]>([]);
     const [dealer, setDealer] = React.useState<People>({ hand: [], total: 0, blackjack: false });
     const [player, setPlayer] = React.useState<People>({ hand: [], total: 0, blackjack: false });
-    const [gameResult, setGameResult] = React.useState<string>('');
+    const [gameResult, setGameResult] = React.useState<GameResult | undefined>(undefined);
 
     const createCards = (): CardInfo[] => {
         const cards: CardInfo[] = [];
-        const marks = ['spade', 'hurt', 'diamond', 'clover'];
+        const suits: Suit[] = ['spade', 'heart', 'diamond', 'club'];
         const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
-        marks.forEach(mark => {
+        suits.forEach(suit => {
             numbers.forEach(number => {
                 cards.push({
-                    mark: mark,
+                    suit: suit,
                     number: number,
                     isShow: false,
                 });
@@ -139,27 +139,27 @@ export const HomePage: React.FC<HomePageProps> = (props) => {
         }
 
         if (player.total > 21) {
-            setGameResult('lose');
+            setGameResult('LOSE');
         }
         else if (dealer.total > 21) {
-            setGameResult('win');
+            setGameResult('WIN');
         }
         else if (player.total == dealer.total) {
             if (player.blackjack && !dealer.blackjack) {
-                setGameResult('win');
+                setGameResult('WIN');
             }
             else if (!player.blackjack && dealer.blackjack) {
-                setGameResult('lose');
+                setGameResult('LOSE');
             }
             else {
-                setGameResult('draw');
+                setGameResult('DRAW');
             }            
         }
         else if (player.total > dealer.total) {
-            setGameResult('win');
+            setGameResult('WIN');
         }
         else {
-            setGameResult('lose');
+            setGameResult('LOSE');
         }
     }, [gameStatus, player, dealer])
 
