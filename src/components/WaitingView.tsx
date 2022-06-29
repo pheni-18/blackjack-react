@@ -1,8 +1,12 @@
-import { Button, Grid } from '@mui/material';
+import { Button, Grid, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 
+const StyledTypography = styled(Typography)({
+    marginTop: 100,
+});
+
 const StyledButton = styled(Button)({
-    marginTop: 300,
+    marginTop: 200,
 });
   
 
@@ -17,9 +21,11 @@ export const WaitingView: React.FC<WaitingViewProps> = (props) => {
         <>
             <Grid 
                 container
+                direction="column"
                 alignItems='center'
                 justifyContent='center'
             >
+                <StyledTypography variant='h2'>Blackjack</StyledTypography>
                 <StyledButton
                     variant='contained'
                     onClick={onClickStart}
