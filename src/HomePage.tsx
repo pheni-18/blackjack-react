@@ -104,7 +104,7 @@ export const HomePage: React.FC<HomePageProps> = (props) => {
         setDeck([...deck]);
         setPlayer({...player});
 
-        if (player.total > 21) {
+        if (player.total >= 21) {
             handleClickStand();
         }
     }, [deck, player]);
