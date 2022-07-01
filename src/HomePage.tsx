@@ -46,17 +46,11 @@ export const HomePage: React.FC<HomePageProps> = (props) => {
             }
         });
 
-        numbers = numbers.sort((a, b) => a - b);
-        numbers = numbers.reverse();
+        let total: number = numbers.reduce((sum, n) => sum + n, 0);
+        if (numbers.includes(1) && total <= 11) {
+            total += 10;
+        }
 
-        let total: number = 0;
-        numbers.forEach(n => {
-            if (n == 1 && total + 11 <= 21) {
-                total += 11;
-                return;
-            }
-            total += n;
-        });
         return total;
     }
 
@@ -104,7 +98,7 @@ export const HomePage: React.FC<HomePageProps> = (props) => {
         setDeck([...deck]);
         setPlayer({...player});
 
-        if (player.total >= 21) {
+        if (player.total > 21) {
             handleClickStand();
         }
     }, [deck, player]);
